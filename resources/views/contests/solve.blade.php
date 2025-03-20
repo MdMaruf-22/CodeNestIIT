@@ -17,6 +17,24 @@
 
 <h3 class="font-semibold mt-4">Sample Output:</h3>
 <pre class="bg-gray-200 p-2 rounded">{{ $problem->sample_output }}</pre>
+<!-- Check if the problem is already solved by the user -->
+@php
+    $solved = $contest->submissions()
+        ->where('user_id', auth()->id())
+        ->where('problem_id', $problem->id)
+        ->where('status', 'Correct')
+        ->exists();
+@endphp
+
+<!-- Show Problem Status -->
+<h3 class="mt-4 font-semibold text-lg">
+    Status: 
+    @if ($solved)
+        ✅ Solved
+    @else
+        ❌ Unsolved
+    @endif
+</h3>
 <!-- Code Editor -->
 <h3 class="font-semibold mt-6">Write Your Code:</h3>
 <div class="border rounded bg-gray-900 text-white p-2">

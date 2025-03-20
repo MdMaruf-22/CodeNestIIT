@@ -15,6 +15,7 @@ class ContestSubmission extends Model
         'code',
         'output',
         'status',
+        'submission_time'
     ];
 
     public function user()

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Submission;
 use GuzzleHttp\Client;
+use App\Models\ContestSubmission;
 
 class ContestController extends Controller
 {
@@ -94,5 +95,34 @@ class ContestController extends Controller
         ]);
 
         return back()->with('status', $status)->with('output', $output);
+    }
+    public function leaderboard(Contest $contest)
+    {
+        $leaderboard = ContestSubmission::where('contest_submissions.contest_id', $contest->id)
+            ->where('contest_submissions.status', 'Correct')
+            ->join('contest_problems', function ($join) {
+                $join->on('contest_submissions.problem_id', '=', 'contest_problems.problem_id')
+                    ->on('contest_submissions.contest_id', '=', 'contest_problems.contest_id');
+            })
+            ->selectRaw('
+            contest_submissions.user_id,
+            SUM(contest_problems.score) as total_score,
+            MAX(contest_submissions.submission_time) as last_solved_time,
+            COUNT(DISTINCT contest_submissions.problem_id) as correct_submissions
+        ')
+            ->whereRaw('contest_submissions.id IN (
+            SELECT MIN(sub_time.id) FROM contest_submissions AS sub_time
+            WHERE sub_time.user_id = contest_submissions.user_id
+            AND sub_time.problem_id = contest_submissions.problem_id
+            AND sub_time.contest_id = contest_submissions.contest_id
+            AND sub_time.status = "Correct"
+            GROUP BY sub_time.user_id, sub_time.problem_id, sub_time.contest_id
+        )')
+            ->groupBy('contest_submissions.user_id')
+            ->orderByDesc('total_score')
+            ->orderBy('last_solved_time')
+            ->get();
+
+        return view('contests.leaderboard', compact('contest', 'leaderboard'));
     }
 }

@@ -19,4 +19,8 @@ class Contest extends Model
     {
         return $this->belongsToMany(Problem::class, 'contest_problems');
     }
+    public function submissions()
+    {
+        return $this->hasMany(ContestSubmission::class);
+    }
 }

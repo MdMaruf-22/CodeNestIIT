@@ -14,7 +14,16 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+// Teacher-Specific Routes
+Route::middleware(['auth', 'role:teacher'])->group(function () {
+    Route::get('/teacher/dashboard', function () {
+        return view('teacher.dashboard');
+    });
 
+    // Contest Management
+    Route::get('/contests/create', [ContestController::class, 'create'])->name('contests.create');
+    Route::post('/contests/store', [ContestController::class, 'store'])->name('contests.store');
+});
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
     // Profile Management
@@ -31,20 +40,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/contests', [ContestController::class, 'index'])->name('contests.index');
     Route::get('/contests/{contest}', [ContestController::class, 'show'])->name('contests.show');
     Route::get('/contests/{contest}/problems/{problem}', [ContestController::class, 'solve'])->name('contests.solve');
+    Route::get('/contests/{contest}/leaderboard', [ContestController::class, 'leaderboard'])->name('contests.leaderboard');
 
     // Submitting Code for Contest Problems
     Route::post('/contests/{contest}/problems/{problem}/submit', [ContestSubmissionController::class, 'submit'])->name('contests.submit');
-});
-
-// Teacher-Specific Routes
-Route::middleware(['auth', 'role:teacher'])->group(function () {
-    Route::get('/teacher/dashboard', function () {
-        return view('teacher.dashboard');
-    });
-
-    // Contest Management
-    Route::get('/contests/create', [ContestController::class, 'create'])->name('contests.create');
-    Route::post('/contests/store', [ContestController::class, 'store'])->name('contests.store');
 });
 
 // Student-Specific Routes
