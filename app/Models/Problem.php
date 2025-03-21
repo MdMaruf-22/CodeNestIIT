@@ -20,4 +20,8 @@ class Problem extends Model
     {
         return $this->hasMany(Submission::class);
     }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

@@ -5,7 +5,7 @@
 @section('content')
 <h2 class="text-2xl font-bold">Welcome, Student!</h2>
 <p class="text-gray-700">This is your student dashboard where you can practice coding, view problems, and join contests.</p>
-<a href="#" class="mt-4 inline-block px-6 py-2 bg-green-500 text-white rounded">Start Practicing</a>
+<a href="{{ route('problems.index') }}" class="mt-4 inline-block px-6 py-2 bg-green-500 text-white rounded">Start Practicing</a>
 <a href="{{ route('contests.index') }}" class="mt-4 inline-block px-6 py-2 bg-green-500 text-white rounded">
     Check Ongoing Contest
 </a>

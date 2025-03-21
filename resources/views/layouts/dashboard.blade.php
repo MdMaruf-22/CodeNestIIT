@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - CodeNestIIT</title>
     <script src="https://cdn.tailwindcss.com"></script> <!-- Use Tailwind for styling -->
 </head>
+
 <body class="bg-gray-100">
 
     <!-- Navigation Bar -->
@@ -15,8 +17,11 @@
             <div>
                 <a href="{{ url('/dashboard') }}" class="px-4">Dashboard</a>
                 <a href="{{ route('logout') }}" class="px-4"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     Logout
+                </a>
+                <a href="{{ route('profile.show', auth()->user()->id) }}" class="px-4">
+                    View Profile
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                     @csrf
@@ -31,4 +36,5 @@
     </div>
 
 </body>
+
 </html>

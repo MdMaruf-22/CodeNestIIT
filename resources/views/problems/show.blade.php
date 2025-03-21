@@ -101,6 +101,52 @@ int main() {
     </div>
 </div>
 
+<!-- Discussion and Comment -->
+<h3 class="font-semibold mt-6">Discussion & Comments</h3>
+
+@if(auth()->check())
+<form action="{{ route('comments.store', $problem->id) }}" method="POST" class="mt-4">
+    @csrf
+    <textarea name="content" rows="3" class="w-full p-2 border rounded" placeholder="Write a comment..."></textarea>
+    <button type="submit" class="mt-2 px-4 py-2 bg-green-500 text-white rounded">Post Comment</button>
+</form>
+@else
+<p class="text-gray-600 mt-2">You must be logged in to comment.</p>
+@endif
+
+<ul class="mt-4">
+    @foreach ($problem->comments->where('parent_id', null) as $comment)
+    <li class="border-b p-2">
+        <p class="font-semibold">{{ $comment->user->name }}</p>
+        <p>{{ $comment->content }}</p>
+        <p class="text-sm text-gray-500">{{ $comment->created_at->diffForHumans() }}</p>
+
+        <!-- Show Replies -->
+        <ul class="mt-2 ml-6">
+            @foreach ($comment->replies as $reply)
+            <li class="border-l-2 pl-2">
+                <p class="font-semibold">{{ $reply->user->name }}</p>
+                <p>{{ $reply->content }}</p>
+                <p class="text-sm text-gray-500">{{ $reply->created_at->diffForHumans() }}</p>
+            </li>
+            @endforeach
+
+            <!-- Reply Button (After Last Reply) -->
+            @if(auth()->check())
+            <li class="mt-2">
+                <form action="{{ route('comments.store', $problem->id) }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                    <textarea name="content" rows="2" class="w-full p-2 border rounded" placeholder="Reply to this comment..."></textarea>
+                    <button type="submit" class="mt-1 px-3 py-1 bg-blue-500 text-white rounded">Reply</button>
+                </form>
+            </li>
+            @endif
+        </ul>
+    </li>
+    @endforeach
+</ul>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         @if (session('status'))
