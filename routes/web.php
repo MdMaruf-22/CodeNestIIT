@@ -5,6 +5,7 @@ use App\Http\Controllers\ProblemController;
 use App\Http\Controllers\ContestController;
 use App\Http\Controllers\ContestSubmissionController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CommentController;
 
@@ -25,6 +26,22 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
     // Contest Management
     Route::get('/contests/create', [ContestController::class, 'create'])->name('contests.create');
     Route::post('/contests/store', [ContestController::class, 'store'])->name('contests.store');
+
+
+    Route::get('/teacher/contests', [TeacherController::class, 'manageContests'])->name('teacher.contests');
+    Route::get('/teacher/problems', [TeacherController::class, 'manageProblems'])->name('teacher.problems');
+
+    Route::get('/teacher/contests/create', [TeacherController::class, 'createContest'])->name('teacher.contests.create');
+    Route::post('/teacher/contests/store', [TeacherController::class, 'storeContest'])->name('teacher.contests.store');
+    Route::get('/teacher/contests/{contest}/edit', [TeacherController::class, 'editContest'])->name('teacher.contests.edit');
+    Route::post('/teacher/contests/{contest}/update', [TeacherController::class, 'updateContest'])->name('teacher.contests.update');
+    Route::delete('/teacher/contests/{contest}/delete', [TeacherController::class, 'deleteContest'])->name('teacher.contests.delete');
+
+    Route::get('/teacher/problems/create', [TeacherController::class, 'createProblem'])->name('teacher.problems.create');
+    Route::post('/teacher/problems/store', [TeacherController::class, 'storeProblem'])->name('teacher.problems.store');
+    Route::get('/teacher/problems/{problem}/edit', [TeacherController::class, 'editProblem'])->name('teacher.problems.edit');
+    Route::post('/teacher/problems/{problem}/update', [TeacherController::class, 'updateProblem'])->name('teacher.problems.update');
+    Route::delete('/teacher/problems/{problem}/delete', [TeacherController::class, 'deleteProblem'])->name('teacher.problems.delete');
 });
 // Authenticated Routes
 Route::middleware('auth')->group(function () {
