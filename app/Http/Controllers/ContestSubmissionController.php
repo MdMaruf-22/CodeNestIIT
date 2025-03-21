@@ -37,10 +37,10 @@ class ContestSubmissionController extends Controller
 
         // Execute code via JDoodle
         $client = new Client(['verify' => false]);
-        $response = $client->post('https://api.jdoodle.com/v1/execute', [
+        $response = $client->post(env('JDOODLE_API_URL'), [
             'json' => [
-                'clientId' => 'd71aeebda579d45d0ebb3291ad92c03e',
-                'clientSecret' => 'b0c7b5ce5868ae046501f76dfd089445579a66bf6222618c811cfbb31db06509',
+                'clientId' => env('JDOODLE_CLIENT_ID'),
+                'clientSecret' => env('JDOODLE_CLIENT_SECRET'),
                 'script' => $code,
                 'language' => 'c',
                 'versionIndex' => '5',
@@ -87,7 +87,6 @@ class ContestSubmissionController extends Controller
             'output' => $output,
             'status' => $status,
         ]);
-
         return back()->with('status', $status)->with('output', $output);
     }
 }
