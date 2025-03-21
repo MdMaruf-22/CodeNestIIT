@@ -37,10 +37,10 @@ class ProblemController extends Controller
 
         // JDoodle API Request
         $client = new Client(['verify' => false]); // Temporary SSL fix
-        $response = $client->post(env('JDOODLE_API_URL'), [
+        $response = $client->post('https://api.jdoodle.com/v1/execute', [
             'json' => [
-                'clientId' => env('JDOODLE_CLIENT_ID'),
-                'clientSecret' => env('JDOODLE_CLIENT_SECRET'),
+                'clientId' => 'd71aeebda579d45d0ebb3291ad92c03e',
+                'clientSecret' => 'b0c7b5ce5868ae046501f76dfd089445579a66bf6222618c811cfbb31db06509',
                 'script' => $code,
                 'language' => 'c',
                 'versionIndex' => '5',
