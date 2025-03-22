@@ -58,12 +58,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/problems', [ProblemController::class, 'index'])->name('problems.index');
     Route::get('/problems/{id}', [ProblemController::class, 'show'])->name('problems.show');
     Route::post('/problems/{id}/submit', [ProblemController::class, 'submit'])->name('problems.submit');
+    Route::post('/problems/{problem}/runCustom', [ProblemController::class, 'runCustom'])->name('problems.runCustom');
 
     // Contests (For Everyone)
     Route::get('/contests', [ContestController::class, 'index'])->name('contests.index');
     Route::get('/contests/{contest}', [ContestController::class, 'show'])->name('contests.show');
     Route::get('/contests/{contest}/problems/{problem}', [ContestController::class, 'solve'])->name('contests.solve');
     Route::get('/contests/{contest}/leaderboard', [ContestController::class, 'leaderboard'])->name('contests.leaderboard');
+    Route::get('/contests/{contest}/results', [ContestController::class, 'results'])->name('contests.results');
 
     //Comment
     Route::post('/problems/{problem}/comments', [CommentController::class, 'store'])->middleware('auth')->name('comments.store');

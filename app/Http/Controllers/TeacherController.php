@@ -78,6 +78,10 @@ class TeacherController extends Controller
             'output_format' => 'required|string',
             'sample_input' => 'required|string',
             'sample_output' => 'required|string',
+            'difficulty' => 'required|in:Easy,Medium,Hard',
+            'tags' => 'nullable|string',
+            'editorial' => 'nullable|string',
+            'hint' => 'nullable|string'
         ]);
 
         Problem::create($request->all());
@@ -99,6 +103,10 @@ class TeacherController extends Controller
             'output_format' => 'required|string',
             'sample_input' => 'required|string',
             'sample_output' => 'required|string',
+            'difficulty' => 'required|in:Easy,Medium,Hard',
+            'tags' => 'nullable|string',
+            'editorial' => 'nullable|string',
+            'hint' => 'nullable|string'
         ]);
 
         $problem->update($request->all());

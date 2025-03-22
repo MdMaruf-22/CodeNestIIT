@@ -15,6 +15,10 @@ class Problem extends Model
         'output_format',
         'sample_input',
         'sample_output',
+        'difficulty',
+        'tags',
+        'editorial',
+        'hint',
     ];
     public function submissions()
     {
@@ -27,5 +31,9 @@ class Problem extends Model
     public function testCases()
     {
         return $this->hasMany(TestCase::class);
+    }
+    public function getTagsArrayAttribute()
+    {
+        return $this->tags ? explode(',', $this->tags) : [];
     }
 }

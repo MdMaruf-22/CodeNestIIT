@@ -88,10 +88,33 @@ class ProblemController extends Controller
                 'actual_output' => $failedCase['actual']
             ]);
         }
-        
-        
+
+
         return back()->with('status', $status)
-                     ->with('output', '✅ All test cases passed');
-        
+            ->with('output', '✅ All test cases passed');
+    }
+    public function runCustom(Request $request, $id)
+    {
+        $request->validate([
+            'code' => 'required|string',
+            'input' => 'nullable|string'
+        ]);
+
+        $problem = Problem::findOrFail($id);
+        $client = new Client(['verify' => false]);
+
+        $response = $client->post(env('JDOODLE_API_URL'), [
+            'json' => [
+                'clientId' => env('JDOODLE_CLIENT_ID'),
+                'clientSecret' => env('JDOODLE_CLIENT_SECRET'),
+                'script' => $request->code,
+                'language' => 'c',
+                'versionIndex' => '5',
+                'stdin' => $request->input,
+            ],
+        ]);
+
+        $result = json_decode($response->getBody(), true);
+        return response()->json(['output' => trim($result['output'] ?? 'Error running code')]);
     }
 }

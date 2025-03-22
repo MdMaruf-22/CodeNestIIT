@@ -4,8 +4,41 @@
 
 @section('content')
 
-<h2 class="text-2xl font-bold text-gray-900 mt-6">{{ $problem->title }}</h2>
-<p class="text-gray-700">{{ $problem->description }}</p>
+<div class="flex flex-col md:flex-row justify-between mt-6">
+    <div class="md:w-3/4">
+        <h2 class="text-2xl font-bold text-gray-900">{{ $problem->title }}</h2>
+        <p class="text-gray-700">{{ $problem->description }}</p>
+    </div>
+
+    <!-- Difficulty and Tags Section -->
+    <div class="md:w-1/4 bg-gray-50 p-4 rounded-lg shadow-md">
+        <h3 class="font-semibold text-gray-800">Difficulty:</h3>
+        <p class="bg-gray-100 p-2 rounded text-center font-semibold text-sm text-gray-900">{{ $problem->difficulty }}</p>
+
+        <h3 class="font-semibold mt-4 text-gray-800">Tags:</h3>
+        <div class="flex flex-wrap gap-2 mt-2">
+            @foreach ($problem->tags_array as $tag)
+            <span class="px-3 py-1 bg-blue-200 text-blue-900 text-xs font-semibold rounded-full">{{ trim($tag) }}</span>
+            @endforeach
+        </div>
+
+        <!-- Hint Section -->
+        @if($problem->hint)
+        <h3 class="font-semibold mt-4 text-gray-800">Hint:</h3>
+        <p class="bg-yellow-100 p-2 rounded">{{ $problem->hint }}</p>
+        @endif
+
+        <!-- Editorial Section -->
+        @if($problem->editorial)
+        <h3 class="font-semibold mt-4 text-gray-800">Editorial:</h3>
+        <p class="bg-green-100 p-2 rounded hidden" id="editorial">{{ $problem->editorial }}</p>
+        <button onclick="document.getElementById('editorial').classList.toggle('hidden')" class="mt-2 px-4 py-2 bg-green-500 text-white rounded">
+            Toggle Editorial
+        </button>
+        @endif
+    </div>
+
+</div>
 
 <h3 class="font-semibold mt-4">Input Format:</h3>
 <p class="bg-gray-100 p-2 rounded">{{ $problem->input_format }}</p>
@@ -24,10 +57,10 @@
 <div class="border rounded bg-gray-900 text-white p-2">
     <div id="editor" style="height: 300px; width: 100%;">#include&lt;stdio.h&gt;
 
-int main() {
-    printf("Hello, World!");
-    return 0;
-}
+        int main() {
+        printf("Hello, World!");
+        return 0;
+        }
     </div>
 </div>
 
@@ -41,7 +74,7 @@ int main() {
 <!-- Load ACE Editor -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         console.log("Script Loaded Successfully!");
 
         var editor = ace.edit("editor");
@@ -68,6 +101,29 @@ int main() {
     });
 </script>
 
+<!-- Test with Custom Input -->
+<h3 class="font-semibold mt-6">Test with Custom Input:</h3>
+<textarea id="customInput" rows="3" class="w-full p-2 border rounded" placeholder="Enter custom input..."></textarea>
+
+<button onclick="runCustomTest()" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded">
+    Run with Custom Input
+</button>
+
+<div id="loadingSpinner" class="hidden text-blue-600 mt-2">
+    <svg class="animate-spin h-5 w-5 mx-auto text-blue-500" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+    </svg>
+    <p class="text-center text-sm">Running test...</p>
+</div>
+<!-- Custom Output Display -->
+<div id="customOutputBox" class="hidden mt-4 p-3 bg-gray-100 rounded">
+    <h3 class="font-semibold">Output:</h3>
+    <pre id="customOutput" class="text-gray-800"></pre>
+</div>
+
+
+
 <h3 class="font-semibold mt-6">Submission History</h3>
 <table class="w-full mt-4 border-collapse border border-gray-300">
     <thead>
@@ -80,14 +136,16 @@ int main() {
     </thead>
     <tbody>
         @foreach ($problem->submissions->where('user_id', auth()->id()) as $submission)
-            <tr class="border">
-                <td class="border p-2"><pre>{{ Str::limit($submission->code, 50) }}</pre></td>
-                <td class="border p-2">{{ $submission->output }}</td>
-                <td class="border p-2 {{ $submission->status === 'Correct' ? 'text-green-600' : 'text-red-600' }}">
-                    {{ $submission->status }}
-                </td>
-                <td class="border p-2">{{ $submission->created_at->diffForHumans() }}</td>
-            </tr>
+        <tr class="border">
+            <td class="border p-2">
+                <pre>{{ Str::limit($submission->code, 50) }}</pre>
+            </td>
+            <td class="border p-2">{{ $submission->output }}</td>
+            <td class="border p-2 {{ $submission->status === 'Correct' ? 'text-green-600' : 'text-red-600' }}">
+                {{ $submission->status }}
+            </td>
+            <td class="border p-2">{{ $submission->created_at->diffForHumans() }}</td>
+        </tr>
         @endforeach
     </tbody>
 </table>
@@ -148,11 +206,11 @@ int main() {
 </ul>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        @if (session('status') === 'Correct')
-            showSuccessPopup();
-        @elseif (session('status') === 'Incorrect')
-            showFailedTestCase(`{{ session('failed_input') }}`, `{{ session('expected_output') }}`, `{{ session('actual_output') }}`);
+    document.addEventListener("DOMContentLoaded", function() {
+        @if(session('status') === 'Correct')
+        showSuccessPopup();
+        @elseif(session('status') === 'Incorrect')
+        showFailedTestCase(`{{ session('failed_input') }}`, `{{ session('expected_output') }}`, `{{ session('actual_output') }}`);
         @endif
     });
 
@@ -185,6 +243,49 @@ int main() {
 
     function closePopup() {
         document.getElementById("submissionPopup").classList.add("hidden");
+    }
+
+    function runCustomTest() {
+        let editor = ace.edit("editor");
+        let code = editor.getValue().trim();
+        let customInput = document.getElementById("customInput").value.trim();
+        let outputBox = document.getElementById("customOutputBox");
+        let outputField = document.getElementById("customOutput");
+        let spinner = document.getElementById("loadingSpinner");
+
+        if (!code) {
+            alert("Please enter some code before testing.");
+            return;
+        }
+
+        // Show loading spinner and output box
+        outputBox.classList.remove("hidden");
+        spinner.classList.remove("hidden");
+        outputField.textContent = "";
+
+        let startTime = Date.now();
+
+        fetch("{{ route('problems.runCustom', $problem->id) }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({
+                    code: code,
+                    input: customInput
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let elapsedTime = (Date.now() - startTime) / 1000;
+                spinner.classList.add("hidden"); // Hide spinner
+                outputField.innerHTML = `Output (Executed in ${elapsedTime.toFixed(2)}s):\n${data.output}`;
+            })
+            .catch(error => {
+                spinner.classList.add("hidden");
+                outputField.textContent = "❌ Error: " + error.message;
+            });
     }
 </script>
 

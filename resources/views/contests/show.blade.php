@@ -9,7 +9,11 @@
 <!-- Contest Timer -->
 <h3 class="text-xl font-semibold mt-4">Time Remaining:</h3>
 <p id="countdown" class="text-red-500 text-lg font-bold"></p>
-
+@if (now()->greaterThan($contest->end_time))
+    <a href="{{ route('contests.results', $contest->id) }}" class="mt-4 inline-block px-4 py-2 bg-purple-500 text-white rounded">
+        View Final Results
+    </a>
+@endif
 <a href="{{ route('contests.leaderboard', $contest->id) }}"
     class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded">
     View Leaderboard
