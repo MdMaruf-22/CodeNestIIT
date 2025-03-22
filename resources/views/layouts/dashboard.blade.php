@@ -15,7 +15,9 @@
         <div class="container mx-auto flex justify-between">
             <h1 class="text-xl font-bold">CodeNestIIT</h1>
             <div>
-                <a href="{{ url('/dashboard') }}" class="px-4">Dashboard</a>
+            <a href="{{ auth()->user()->role === 'student' ? url('student/dashboard') : url('teacher/dashboard') }}" class="px-4">
+        Dashboard
+    </a>
                 <a href="{{ route('logout') }}" class="px-4"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     Logout
