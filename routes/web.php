@@ -27,7 +27,11 @@ Route::middleware(['auth', 'role:teacher'])->group(function () {
     Route::get('/contests/create', [ContestController::class, 'create'])->name('contests.create');
     Route::post('/contests/store', [ContestController::class, 'store'])->name('contests.store');
 
-
+    // Test case management
+    Route::get('/teacher/problems/{problem}/test-cases', [TeacherController::class, 'manageTestCases'])->name('teacher.test_cases');
+    Route::post('/teacher/problems/{problem}/test-cases/store', [TeacherController::class, 'storeTestCase'])->name('teacher.test_cases.store');
+    Route::delete('/teacher/test-cases/{testCase}/delete', [TeacherController::class, 'deleteTestCase'])->name('teacher.test_cases.delete');
+    
     Route::get('/teacher/contests', [TeacherController::class, 'manageContests'])->name('teacher.contests');
     Route::get('/teacher/problems', [TeacherController::class, 'manageProblems'])->name('teacher.problems');
 

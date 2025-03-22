@@ -34,34 +34,64 @@ class ProblemController extends Controller
 
         $problem = Problem::findOrFail($id);
         $code = $request->code;
+        $testCases = $problem->testCases; // Fetch all test cases
 
-        // JDoodle API Request
         $client = new Client(['verify' => false]); // Temporary SSL fix
-        $response = $client->post(env('JDOODLE_API_URL'), [
-            'json' => [
-                'clientId' => env('JDOODLE_CLIENT_ID'),
-                'clientSecret' => env('JDOODLE_CLIENT_SECRET'),
-                'script' => $code,
-                'language' => 'c',
-                'versionIndex' => '5',
-                'stdin' => $problem->sample_input,
-            ],
-        ]);
 
-        $result = json_decode($response->getBody(), true);
-        $output = trim($result['output'] ?? '');
-        $expectedOutput = trim($problem->sample_output);
-        $status = ($output === $expectedOutput) ? 'Correct' : 'Incorrect';
+        $allPassed = true; // Track if all test cases pass
+        $failedCase = null; // Store first failed case details
+
+        foreach ($testCases as $testCase) {
+            // JDoodle API Request for each test case
+            $response = $client->post(env('JDOODLE_API_URL'), [
+                'json' => [
+                    'clientId' => env('JDOODLE_CLIENT_ID'),
+                    'clientSecret' => env('JDOODLE_CLIENT_SECRET'),
+                    'script' => $code,
+                    'language' => 'c',
+                    'versionIndex' => '5',
+                    'stdin' => $testCase->input, // Use test case input
+                ],
+            ]);
+
+            $result = json_decode($response->getBody(), true);
+            $output = trim($result['output'] ?? '');
+            $expectedOutput = trim($testCase->expected_output);
+
+            if ($output !== $expectedOutput) {
+                $allPassed = false;
+                $failedCase = [
+                    'input' => $testCase->input,
+                    'expected' => $expectedOutput,
+                    'actual' => $output,
+                ];
+                break; // Stop checking after first failed case
+            }
+        }
+
+        $status = $allPassed ? 'Correct' : 'Incorrect';
 
         // Save Submission
         Submission::create([
             'user_id' => Auth::id(),
             'problem_id' => $problem->id,
             'code' => $code,
-            'output' => $output,
+            'output' => $failedCase ? $failedCase['actual'] : 'All test cases passed',
             'status' => $status,
         ]);
 
-        return back()->with('status', $status)->with('output', $output);
+        if (!$allPassed) {
+            return back()->with([
+                'status' => $status,
+                'failed_input' => $failedCase['input'],
+                'expected_output' => $failedCase['expected'],
+                'actual_output' => $failedCase['actual']
+            ]);
+        }
+        
+        
+        return back()->with('status', $status)
+                     ->with('output', '✅ All test cases passed');
+        
     }
 }

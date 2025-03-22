@@ -24,4 +24,8 @@ class Problem extends Model
     {
         return $this->hasMany(Comment::class);
     }
+    public function testCases()
+    {
+        return $this->hasMany(TestCase::class);
+    }
 }

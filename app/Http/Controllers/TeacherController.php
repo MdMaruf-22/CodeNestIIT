@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Contest;
 use App\Models\Problem;
+use App\Models\TestCase;
 
 class TeacherController extends Controller
 {
@@ -109,5 +110,33 @@ class TeacherController extends Controller
     {
         $problem->delete();
         return redirect()->route('teacher.problems')->with('success', 'Problem deleted.');
+    }
+    public function manageTestCases(Problem $problem)
+    {
+        return view('teacher.problems.test_cases', compact('problem'));
+    }
+
+    public function storeTestCase(Request $request, Problem $problem)
+    {
+        $request->validate([
+            'input' => 'required|string',
+            'expected_output' => 'required|string',
+            'is_sample' => 'boolean'
+        ]);
+
+        TestCase::create([
+            'problem_id' => $problem->id,
+            'input' => $request->input,
+            'expected_output' => $request->expected_output,
+            'is_sample' => $request->has('is_sample')
+        ]);
+
+        return back()->with('success', 'Test case added successfully.');
+    }
+
+    public function deleteTestCase(TestCase $testCase)
+    {
+        $testCase->delete();
+        return back()->with('success', 'Test case removed.');
     }
 }

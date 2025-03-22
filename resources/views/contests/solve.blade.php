@@ -92,24 +92,37 @@ int main() {
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        @if(session('status'))
-        showPopup("{{ session('status') }}", "{{ session('output') }}");
+    document.addEventListener("DOMContentLoaded", function () {
+        @if (session('status') === 'Correct')
+            showSuccessPopup();
+        @elseif (session('status') === 'Incorrect')
+            showFailedTestCase(`{{ session('failed_input') }}`, `{{ session('expected_output') }}`, `{{ session('actual_output') }}`);
         @endif
     });
 
-    function showPopup(status, output) {
+    function showSuccessPopup() {
         let popupTitle = document.getElementById("popupTitle");
         let popupMessage = document.getElementById("popupMessage");
         let popup = document.getElementById("submissionPopup");
 
-        if (status === "Correct") {
-            popupTitle.textContent = "✅ Code Accepted!";
-            popupMessage.textContent = "Your code has passed all test cases.";
-        } else {
-            popupTitle.textContent = "❌ Code Rejected!";
-            popupMessage.textContent = "Your output: " + output + "\n\nExpected output did not match.";
-        }
+        popupTitle.textContent = "✅ Code Accepted!";
+        popupMessage.innerHTML = "<p>🎉 Congratulations! Your code has passed all test cases.</p>";
+
+        popup.classList.remove("hidden");
+    }
+
+    function showFailedTestCase(input, expected, actual) {
+        let popupTitle = document.getElementById("popupTitle");
+        let popupMessage = document.getElementById("popupMessage");
+        let popup = document.getElementById("submissionPopup");
+
+        popupTitle.textContent = "❌ Code Rejected!";
+        popupMessage.innerHTML = `
+            <p><strong>Failed Test Case:</strong></p>
+            <p><strong>🔹 Input:</strong> <code>${input.replace(/\n/g, "<br>")}</code></p>
+            <p><strong>✅ Expected Output:</strong> <code>${expected.replace(/\n/g, "<br>")}</code></p>
+            <p><strong>❌ Your Output:</strong> <code>${actual.replace(/\n/g, "<br>")}</code></p>
+        `;
 
         popup.classList.remove("hidden");
     }

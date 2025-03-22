@@ -18,8 +18,47 @@ class ContestSubmissionController extends Controller
         $problem = Problem::findOrFail($problemId);
         $contest = Contest::findOrFail($contestId);
         $code = $request->code;
+        $testCases = $problem->testCases; // Fetch all test cases
 
-        // Check if user has previously solved this problem correctly
+        $client = new Client(['verify' => false]); // Temporary SSL fix
+
+        $allPassed = true; // Track if all test cases pass
+        $failedCase = null; // Store first failed case details
+
+        foreach ($testCases as $testCase) {
+            // JDoodle API Request for each test case
+            $response = $client->post(env('JDOODLE_API_URL'), [
+                'json' => [
+                    'clientId' => env('JDOODLE_CLIENT_ID'),
+                    'clientSecret' => env('JDOODLE_CLIENT_SECRET'),
+                    'script' => $code,
+                    'language' => 'c',
+                    'versionIndex' => '5',
+                    'stdin' => $testCase->input, // Use test case input
+                ],
+            ]);
+
+            $result = json_decode($response->getBody(), true);
+            $output = trim($result['output'] ?? '');
+            $expectedOutput = trim($testCase->expected_output);
+
+            if ($output !== $expectedOutput) {
+                $allPassed = false;
+                $failedCase = [
+                    'input' => $testCase->input,
+                    'expected' => $expectedOutput,
+                    'actual' => $output,
+                ];
+                break; // Stop checking after first failed case
+            }
+        }
+
+        $status = $allPassed ? 'Correct' : 'Incorrect';
+
+        // Get elapsed time since contest started
+        $elapsedTime = now()->diffInMinutes($contest->start_time);
+
+        // Calculate penalty
         $previousCorrectSubmission = ContestSubmission::where([
             'user_id' => auth()->id(),
             'contest_id' => $contestId,
@@ -27,7 +66,6 @@ class ContestSubmissionController extends Controller
             'status' => 'Correct'
         ])->first();
 
-        // Count previous incorrect attempts before solving correctly
         $wrongAttempts = ContestSubmission::where([
             'user_id' => auth()->id(),
             'contest_id' => $contestId,
@@ -35,39 +73,13 @@ class ContestSubmissionController extends Controller
             'status' => 'Incorrect'
         ])->count();
 
-        // Execute code via JDoodle
-        $client = new Client(['verify' => false]);
-        $response = $client->post(env('JDOODLE_API_URL'), [
-            'json' => [
-                'clientId' => env('JDOODLE_CLIENT_ID'),
-                'clientSecret' => env('JDOODLE_CLIENT_SECRET'),
-                'script' => $code,
-                'language' => 'c',
-                'versionIndex' => '5',
-                'stdin' => $problem->sample_input,
-            ],
-        ]);
-
-        $result = json_decode($response->getBody(), true);
-        $output = trim($result['output'] ?? '');
-        $expectedOutput = trim($problem->sample_output);
-        $status = ($output === $expectedOutput) ? 'Correct' : 'Incorrect';
-
-        // Get elapsed time since contest started
-        $elapsedTime = now()->diffInMinutes($contest->start_time);
-
-        // If problem was solved before, keep the penalty same as first correct submission
         if ($previousCorrectSubmission) {
             $penaltyTime = $previousCorrectSubmission->submission_time - $elapsedTime;
         } else {
-            // Otherwise, calculate new penalty
             $penaltyTime = $wrongAttempts * 10; // Each incorrect attempt adds 10 minutes
         }
 
-        // Ensure penalty is never negative
         $penaltyTime = max(0, $penaltyTime);
-
-        // Total submission time including penalties
         $submissionTime = $elapsedTime + $penaltyTime;
 
         // Save submission with the correct submission time
@@ -76,17 +88,28 @@ class ContestSubmissionController extends Controller
             'contest_id' => $contestId,
             'problem_id' => $problemId,
             'code' => $code,
-            'output' => $output,
+            'output' => $failedCase ? $failedCase['actual'] : 'All test cases passed',
             'status' => $status,
             'submission_time' => $submissionTime,
         ]);
+
         Submission::create([
             'user_id' => auth()->id(),
             'problem_id' => $problem->id,
             'code' => $code,
-            'output' => $output,
+            'output' => $failedCase ? $failedCase['actual'] : 'All test cases passed',
             'status' => $status,
         ]);
-        return back()->with('status', $status)->with('output', $output);
+
+        if (!$allPassed) {
+            return back()->with([
+                'status' => $status,
+                'failed_input' => $failedCase['input'],
+                'expected_output' => $failedCase['expected'],
+                'actual_output' => $failedCase['actual']
+            ]);
+        }
+
+        return back()->with('status', $status)->with('output', '✅ All test cases passed');
     }
 }
