@@ -20,4 +20,10 @@
     <a href="{{ route('teacher.problems') }}" class="mt-2 inline-block px-4 py-2 bg-blue-500 text-white rounded">Manage Problems</a>
 </div>
 
+<!-- Pending Requests Section -->
+<div class="mt-6 p-4 bg-white rounded shadow">
+    <h3 class="text-xl font-semibold">Pending Requests</h3>
+    <a href="{{ route('teacher.approvals') }}" class="mt-2 inline-block px-4 py-2 bg-yellow-500 text-white rounded">See Pending Requests</a>
+</div>
+
 @endsection

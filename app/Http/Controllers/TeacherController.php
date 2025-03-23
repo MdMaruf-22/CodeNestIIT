@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Contest;
 use App\Models\Problem;
 use App\Models\TestCase;
+use App\Models\User;
 
 class TeacherController extends Controller
 {
@@ -146,5 +147,22 @@ class TeacherController extends Controller
     {
         $testCase->delete();
         return back()->with('success', 'Test case removed.');
+    }
+    public function showApprovals()
+    {
+        $pendingUsers = User::where('is_approved', false)->get();
+        return view('teacher.approvals', compact('pendingUsers'));
+    }
+
+    public function approveUser(User $user)
+    {
+        $user->update(['is_approved' => true]);
+        return redirect()->route('teacher.approvals')->with('success', 'User approved successfully.');
+    }
+
+    public function rejectUser(User $user)
+    {
+        $user->delete();
+        return redirect()->route('teacher.approvals')->with('success', 'User rejected.');
     }
 }
