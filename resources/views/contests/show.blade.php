@@ -29,7 +29,9 @@
     </li>
     @endforeach
 </ul>
-
+<a href="{{ route('contests.discussions', $contest->id) }}" class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded">
+    Join Discussion
+</a>
 <!-- Countdown Timer Script -->
 <script>
     function startCountdown(endTime) {

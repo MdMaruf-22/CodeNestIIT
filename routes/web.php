@@ -8,6 +8,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ContestDiscussionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -82,6 +83,11 @@ Route::middleware(['auth', 'approved'])->group(function () {
 
         // Contest Submissions
         Route::post('/contests/{contest}/problems/{problem}/submit', [ContestSubmissionController::class, 'submit'])->name('contests.submit');
+
+        //Dedicated contest discussion forum
+        Route::get('/contests/{contest}/discussions', [ContestDiscussionController::class, 'index'])->name('contests.discussions');
+        Route::post('/contests/{contest}/discussions', [ContestDiscussionController::class, 'store'])->name('contests.discussions.store');
+
     });
 
     // Student-Specific Routes (Require Approval)
