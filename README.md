@@ -1,66 +1,201 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📖 CodeNestIIT
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+CodeNestIIT is an exclusive interactive **coding platform** designed specifically for students of the **Institute of Information Technology (IIT) at Noakhali Science and Technology University (NSTU)**. It enhances **C programming** education by providing a structured environment for learning, practicing, and competing in coding challenges.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Features Implemented
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### ✅ 1. **User Authentication with Approval System**
+- New users **must be approved** by a teacher before accessing the dashboard.
+- Teachers **approve/reject users** at `/teacher/approvals`.
+- **Implemented in:** `AuthServiceProvider.php`, `CheckApproval Middleware`
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### ✅ 2. **Problem Solving System**
+- **ACE Editor** for coding in the browser.
+- Submissions are **executed via JDoodle API**.
+- **Test Case Validation** ensures correctness across sample & extra test cases.
+- **Submission History** tracks past attempts.
+- **Implemented in:** `ProblemController.php`, `show.blade.php`
 
-## Learning Laravel
+### ✅ 3. **Contests & Leaderboard**
+- Teachers **create contests** and set problems.
+- Students **participate, solve problems, and get ranked**.
+- **Leaderboard Sorting:**
+  - **Primary:** Total Score
+  - **Secondary:** Less Penalty Time
+  - **Tertiary:** Earlier Last Accepted Submission
+- **Implemented in:** `ContestController.php`, `leaderboard.blade.php`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### ✅ 4. **Test Case Validation System**
+- **All test cases (sample + extra) must pass** for a correct submission.
+- **Failed cases show input, expected, and actual output**.
+- **Implemented in:** `ProblemController.php`, `ContestSubmissionController.php`
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### ✅ 5. **Custom Input Execution**
+- Users **test code with custom input** before submitting.
+- **JDoodle API executes the code** and returns output.
+- **Implemented in:** `runCustom()` in `ProblemController.php`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### ✅ 6. **Discussion & Comment System**
+- Users **discuss problems** and **reply to comments**.
+- Replies appear **in order, with a "Reply" button after the last reply**.
+- **Implemented in:** `CommentController.php`, `show.blade.php`
 
-## Laravel Sponsors
+### ✅ 7. **Contest Discussion Forum**
+- Dedicated **Q&A space for contests**.
+- Users **ask & reply to contest-related questions**.
+- **Implemented in:** `ContestDiscussionController.php`, `discussions/index.blade.php`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### ✅ 8. **Plagiarism Detection**
+- **Detects code similarity (≥ 85%)**.
+- **Marks submissions as `Plagiarized`** in the leaderboard.
+- **Implemented in:** `ContestSubmissionController.php`, `leaderboard.blade.php`
 
-### Premium Partners
+### ✅ 9. **User Profile & Stats**
+- **Shows:**  
+  ✔ **Total Contests Participated**  
+  ✔ **Problems Solved in Each Contest**  
+  ✔ **Submission History**  
+- **Each Problem Page Shows:**  
+  ✔ **Acceptance Rate**  
+  ✔ **Total Submissions**  
+  ✔ **Correct Submissions**  
+- **Implemented in:** `UserProfileController.php`, `profile.blade.php`
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### ✅ 10. **Teacher Dashboard**
+- **Teachers can:**
+  ✔ **Create/Edit/Delete Problems**  
+  ✔ **Manage Contests**  
+  ✔ **Approve Users**  
+  ✔ **View Plagiarism Reports**  
+- **Implemented in:** `TeacherController.php`, `teacher/dashboard.blade.php`
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🖥️ Technologies Used
+- **Backend:** Laravel (PHP Framework)
+- **Frontend:** Blade Templates, Tailwind CSS
+- **Database:** MySQL
+- **Code Execution API:** JDoodle API
+- **Authentication:** Middleware Approval System
+- **Editor:** ACE Editor for browser-based coding
+- **Plagiarism Detection:** Custom Algorithm Based on Code Similarity
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🛠️ Installation & Setup  
 
-## Security Vulnerabilities
+### 1️⃣ Clone the Repository  
+```bash
+git clone https://github.com/yourusername/CodeNestIIT.git
+cd CodeNestIIT
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 2️⃣ Install Dependencies  
+```bash
+composer install
+npm install
+npm run dev
+```
 
-## License
+### 3️⃣ Configure Environment  
+```bash
+cp .env.example .env
+```
+Modify `.env` file:  
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```ini
+APP_NAME=CodeNestIIT
+APP_ENV=local
+APP_KEY=base64:yourkey
+APP_DEBUG=true
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=codenest_iit
+DB_USERNAME=root
+DB_PASSWORD=
+
+JDOODLE_CLIENT_ID=your_jdoodle_client_id
+JDOODLE_CLIENT_SECRET=your_jdoodle_client_secret
+JDOODLE_API_URL=https://api.jdoodle.com/v1/execute
+```
+
+### 4️⃣ Run Database Migrations  
+```bash
+php artisan migrate --seed
+```
+
+### 5️⃣ Start Development Server  
+```bash
+php artisan serve
+```
+
+---
+
+## 🔗 API Reference  
+
+### 1️⃣ Problem Submission API  
+**Endpoint:**  
+```http
+POST /problems/{id}/submit
+```
+**Request Body:**  
+```json
+{
+  "code": "#include <stdio.h> \n int main() { printf(\"Hello, World!\"); return 0; }"
+}
+```
+**Response:**  
+```json
+{
+  "status": "Correct",
+  "output": "✅ All test cases passed"
+}
+```
+
+### 2️⃣ Contest Submission API  
+**Endpoint:**  
+```http
+POST /contests/{contest_id}/problems/{problem_id}/submit
+```
+**Response (Plagiarism Detected):**  
+```json
+{
+  "status": "Plagiarized",
+  "message": "⚠️ Plagiarism detected! Your submission has been flagged."
+}
+```
+
+---
+
+## 📜 Roadmap & Future Features  
+- 🔲 **Live Leaderboard** – Real-time updates without refresh.  
+- 🔲 **Group Contests** – Support for teams.  
+- 🔲 **More Language Support** – Python, Java, JavaScript.  
+- 🔲 **Advanced Plagiarism Detection** – Using AI-based similarity detection.  
+
+---
+
+## 🛠️ Development Commands  
+
+### Migrate Database  
+```bash
+php artisan migrate --seed
+```
+
+### Clear Cache & Restart  
+```bash
+php artisan optimize:clear
+php artisan serve
+```
+
+### Run Tests  
+```bash
+php artisan test
+```
+
+---
