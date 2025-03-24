@@ -44,7 +44,8 @@ Route::middleware(['auth', 'approved'])->group(function () {
         Route::get('/teacher/contests/{contest}/edit', [TeacherController::class, 'editContest'])->name('teacher.contests.edit');
         Route::post('/teacher/contests/{contest}/update', [TeacherController::class, 'updateContest'])->name('teacher.contests.update');
         Route::delete('/teacher/contests/{contest}/delete', [TeacherController::class, 'deleteContest'])->name('teacher.contests.delete');
-
+        Route::get('/teacher/plagiarism-reports', [TeacherController::class, 'plagiarismReports'])->name('teacher.plagiarism_reports');
+        
         Route::get('/teacher/problems/create', [TeacherController::class, 'createProblem'])->name('teacher.problems.create');
         Route::post('/teacher/problems/store', [TeacherController::class, 'storeProblem'])->name('teacher.problems.store');
         Route::get('/teacher/problems/{problem}/edit', [TeacherController::class, 'editProblem'])->name('teacher.problems.edit');

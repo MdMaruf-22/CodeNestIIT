@@ -26,4 +26,11 @@
     <a href="{{ route('teacher.approvals') }}" class="mt-2 inline-block px-4 py-2 bg-yellow-500 text-white rounded">See Pending Requests</a>
 </div>
 
+<!-- Plagarism reports -->
+ <div class="mt-6 p-4 bg-white rounded shadow">
+    <h3 class="text-xl font-semibold">Plagarism Reports</h3>
+    <a href="{{ route('teacher.plagiarism_reports') }}" class="mt-2 inline-block px-4 py-2 bg-yellow-500 text-white rounded">See Plagarism Reports</a>
+
+ </div>
+
 @endsection

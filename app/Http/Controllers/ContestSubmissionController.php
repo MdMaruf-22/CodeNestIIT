@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Contest;
 use GuzzleHttp\Client;
 use App\Models\Submission;
+use Illuminate\Support\Facades\Auth;
 
 class ContestSubmissionController extends Controller
 {
@@ -53,7 +54,11 @@ class ContestSubmissionController extends Controller
             }
         }
 
-        $status = $allPassed ? 'Correct' : 'Incorrect';
+        // **🔹 Check for Plagiarism**
+        $isPlagiarized = $this->checkPlagiarism($code, $problemId, $contestId);
+
+        $status = $isPlagiarized ? 'Plagiarized' : ($allPassed ? 'Correct' : 'Incorrect');
+
 
         // Get elapsed time since contest started
         $elapsedTime = now()->diffInMinutes($contest->start_time);
@@ -100,7 +105,9 @@ class ContestSubmissionController extends Controller
             'output' => $failedCase ? $failedCase['actual'] : 'All test cases passed',
             'status' => $status,
         ]);
-
+        if ($isPlagiarized) {
+            return redirect()->back()->with('status', 'Plagiarized');
+        }
         if (!$allPassed) {
             return back()->with([
                 'status' => $status,
@@ -111,5 +118,27 @@ class ContestSubmissionController extends Controller
         }
 
         return back()->with('status', $status)->with('output', '✅ All test cases passed');
+    }
+    // **🔹 Function to Check for Plagiarism**
+    private function checkPlagiarism($newCode, $problemId, $contestId)
+    {
+        $existingSubmissions = ContestSubmission::where('problem_id', $problemId)
+            ->where('contest_id', $contestId)
+            ->where('user_id', '!=', Auth::id()) // Ignore user's own submissions
+            ->pluck('code');
+
+        foreach ($existingSubmissions as $existingCode) {
+            if ($this->isSimilar($newCode, $existingCode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // **🔹 Function to Compare Code Similarity**
+    private function isSimilar($code1, $code2)
+    {
+        similar_text($code1, $code2, $percentage);
+        return $percentage >= 85; // Flag as plagiarism if similarity is 85% or more
     }
 }

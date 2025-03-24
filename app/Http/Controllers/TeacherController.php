@@ -7,6 +7,7 @@ use App\Models\Contest;
 use App\Models\Problem;
 use App\Models\TestCase;
 use App\Models\User;
+use App\Models\ContestSubmission;
 
 class TeacherController extends Controller
 {
@@ -165,4 +166,13 @@ class TeacherController extends Controller
         $user->delete();
         return redirect()->route('teacher.approvals')->with('success', 'User rejected.');
     }
+    public function plagiarismReports()
+{
+    $plagiarizedSubmissions = ContestSubmission::where('status', 'Plagiarized')
+        ->with('user', 'problem', 'contest')
+        ->get();
+
+    return view('teacher.plagiarism_reports', compact('plagiarizedSubmissions'));
+}
+
 }

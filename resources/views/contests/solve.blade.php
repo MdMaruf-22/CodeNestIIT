@@ -97,6 +97,8 @@ int main() {
             showSuccessPopup();
         @elseif (session('status') === 'Incorrect')
             showFailedTestCase(`{{ session('failed_input') }}`, `{{ session('expected_output') }}`, `{{ session('actual_output') }}`);
+        @elseif (session('status') === 'Plagiarized')
+            showPlagiarismPopup();
         @endif
     });
 
@@ -126,7 +128,12 @@ int main() {
 
         popup.classList.remove("hidden");
     }
-
+    function showPlagiarismPopup() {
+        document.getElementById("popupTitle").innerText = "⚠️ Plagiarism Detected!";
+        document.getElementById("popupMessage").innerText = 
+            "Your submission is flagged for plagiarism. Please submit original code.";
+        document.getElementById("submissionPopup").classList.remove("hidden");
+    }
     function closePopup() {
         document.getElementById("submissionPopup").classList.add("hidden");
     }
