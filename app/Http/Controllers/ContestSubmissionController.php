@@ -61,7 +61,12 @@ class ContestSubmissionController extends Controller
 
 
         // Get elapsed time since contest started
-        $elapsedTime = now()->diffInMinutes($contest->start_time);
+        $contestStartTime = \Carbon\Carbon::parse($contest->start_time)->setTimezone(config('app.timezone'));
+        $now = now()->setTimezone(config('app.timezone'));
+
+        $elapsedTime = $now->diffInMinutes($contestStartTime);
+
+
 
         // Calculate penalty
         $previousCorrectSubmission = ContestSubmission::where([
@@ -86,6 +91,13 @@ class ContestSubmissionController extends Controller
 
         $penaltyTime = max(0, $penaltyTime);
         $submissionTime = $elapsedTime + $penaltyTime;
+        // Debugging - Print elapsed time and penalty time before submission 
+        // dd([
+        //     'now' => now(),
+        //     'contest_start_time' => $contestStartTime,
+        //     'timezone' => config('app.timezone'),
+        //     'elapsed_time' => $elapsedTime
+        // ]);
 
         // Save submission with the correct submission time
         ContestSubmission::create([

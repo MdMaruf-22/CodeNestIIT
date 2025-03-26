@@ -3,48 +3,63 @@
 @section('title', 'Leaderboard - ' . $contest->name)
 
 @section('content')
-    <h2 class="text-2xl font-bold">{{ $contest->name }} - Leaderboard</h2>
+<div class="container mx-auto p-6 max-w-screen-xl">
 
-    <table class="w-full mt-4 border-collapse border border-gray-300">
-        <thead>
-            <tr class="bg-gray-200">
-                <th class="border p-2">Rank</th>
-                <th class="border p-2">User</th>
-                <th class="border p-2">Score</th>
-                <th class="border p-2">Penalty</th>
-                @foreach ($contest->problems as $problem)
-                    <th class="border p-2">{{ $problem->title }}</th>
-                @endforeach
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($leaderboard as $index => $entry)
-                <tr class="border">
-                    <td class="border p-2">{{ $index + 1 }}</td>
-                    <td class="border p-2">{{ $entry->user->name }}</td>
-                    <td class="border p-2">{{ $entry->total_score }}</td>
-                    <td class="border p-2">{{ $entry->last_solved_time }}</td>
+    <!-- Contest Title -->
+    <div class="mb-6">
+        <h2 class="text-4xl font-bold text-gray-900">{{ $contest->name }} - Leaderboard</h2>
+    </div>
 
+    <!-- Leaderboard Table -->
+    <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
+        <table class="w-full mt-4 table-auto border-collapse">
+            <thead class="bg-gray-800 text-white">
+                <tr>
+                    <th class="border p-4 text-center">Rank</th>
+                    <th class="border p-4 text-left">User</th>
+                    <th class="border p-4 text-center">Score</th>
+                    <th class="border p-4 text-center">Penalty</th>
                     @foreach ($contest->problems as $problem)
-                        @php
-                            $submission = $contest->submissions()
-                                ->where('user_id', $entry->user_id)
-                                ->where('problem_id', $problem->id)
-                                ->orderBy('submission_time')
-                                ->get();
-                            
-                            $firstCorrect = $submission->where('status', 'Correct')->first();
-                        @endphp
-                        <td class="border p-2">
-                            @if ($firstCorrect)
-                                ✅ ({{ $firstCorrect->submission_time }} min)
-                            @else
-                                ❌
-                            @endif
-                        </td>
+                        <th class="border p-4 text-center">{{ $problem->title }}</th>
                     @endforeach
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($leaderboard as $index => $entry)
+                    <tr class="text-gray-900 hover:bg-gray-100 transition duration-200">
+                        <td class="border p-4 text-center font-semibold 
+                            @if ($index == 0) bg-yellow-500 text-white @elseif ($index == 1) bg-gray-400 text-white @elseif ($index == 2) bg-amber-400 text-white @endif">
+                            {{ $index + 1 }}
+                        </td>
+                        <td class="border p-4 text-left">{{ $entry->user->name }}</td>
+                        <td class="border p-4 text-center font-semibold">{{ $entry->total_score }}</td>
+                        <td class="border p-4 text-center font-semibold">{{ $entry->last_solved_time }}</td>
+
+                        @foreach ($contest->problems as $problem)
+                            @php
+                                $submission = $contest->submissions()
+                                    ->where('user_id', $entry->user_id)
+                                    ->where('problem_id', $problem->id)
+                                    ->orderBy('submission_time')
+                                    ->get();
+                                
+                                $firstCorrect = $submission->where('status', 'Correct')->first();
+                            @endphp
+                            <td class="border p-4 text-center 
+                                @if ($firstCorrect) bg-green-100 text-green-600 @else bg-red-100 text-red-600 @endif">
+                                @if ($firstCorrect)
+                                    ✅ ({{ $firstCorrect->submission_time }} min)
+                                @else
+                                    ❌
+                                @endif
+                            </td>
+                        @endforeach
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
 @endsection
