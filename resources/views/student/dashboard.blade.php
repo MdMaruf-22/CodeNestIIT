@@ -25,10 +25,21 @@
             </div>
         </div>
 
-        <div class="bg-white shadow-lg rounded-lg p-6 mt-6">
-            <h3 class="text-xl font-semibold text-gray-900">📊 Your Submission Stats</h3>
-            <div class="flex justify-center mt-4">
-                <canvas id="submissionChart" class="w-64 h-64"></canvas>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <!-- Submission Accuracy Chart -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-900">📊 Submission Accuracy</h3>
+                <div class="flex justify-center mt-4">
+                    <canvas id="submissionChart" class="w-64 h-64"></canvas>
+                </div>
+            </div>
+
+            <!-- Difficulty Distribution Chart -->
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-900">📈 Solved Problems Difficulty</h3>
+                <div class="flex justify-center mt-4">
+                    <canvas id="difficultyChart" class="w-64 h-64"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -37,26 +48,55 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var ctx = document.getElementById('submissionChart').getContext('2d');
-
-        var submissionData = {
-            labels: ["Correct Submissions", "Incorrect Submissions"],
-            datasets: [{
-                data: [{{ auth()->user()->submissions()->where('status', 'Correct')->count() }},
-                       {{ auth()->user()->submissions()->where('status', 'Incorrect')->count() }}],
-                backgroundColor: ["#4CAF50", "#F44336"],
-            }]
-        };
-
-        new Chart(ctx, {
+        // Submission Accuracy Chart
+        const submissionCtx = document.getElementById('submissionChart').getContext('2d');
+        new Chart(submissionCtx, {
             type: 'doughnut',
-            data: submissionData,
+            data: {
+                labels: ["Correct Submissions", "Incorrect Submissions"],
+                datasets: [{
+                    data: [
+                        {{ $submissionCounts['correct'] }},
+                        {{ $submissionCounts['incorrect'] }}
+                    ],
+                    backgroundColor: ["#4CAF50", "#F44336"],
+                }]
+            },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        position: 'bottom'
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Difficulty Distribution Chart
+        const difficultyCtx = document.getElementById('difficultyChart').getContext('2d');
+        new Chart(difficultyCtx, {
+            type: 'pie',
+            data: {
+                labels: ["Easy", "Medium", "Hard"],
+                datasets: [{
+                    data: [
+                        {{ $difficultyDistribution['Easy'] }},
+                        {{ $difficultyDistribution['Medium'] }},
+                        {{ $difficultyDistribution['Hard'] }}
+                    ],
+                    backgroundColor: ["#4CAF50", "#FFC107", "#F44336"],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.raw} problems`;
+                            }
+                        }
                     }
                 }
             }

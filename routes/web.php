@@ -9,6 +9,7 @@ use App\Http\Controllers\TeacherController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContestDiscussionController;
+use App\Http\Controllers\StudentDashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -93,9 +94,8 @@ Route::middleware(['auth', 'approved'])->group(function () {
 
     // Student-Specific Routes (Require Approval)
     Route::middleware(['role:student'])->group(function () {
-        Route::get('/student/dashboard', function () {
-            return view('student.dashboard');
-        });
+        Route::get('/student/dashboard', [StudentDashboardController::class, 'index'])
+            ->name('student.dashboard');
     });
 });
 
