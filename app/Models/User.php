@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', 
+        'role',
         'is_approved',
     ];
 
@@ -43,4 +43,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class, 'user_id');
+    }
 }

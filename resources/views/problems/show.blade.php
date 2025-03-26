@@ -23,19 +23,18 @@
         </div>
 
         <!-- Hint Section -->
-        @if($problem->hint)
-        <h3 class="font-semibold mt-4 text-gray-800">Hint:</h3>
-        <p class="bg-yellow-100 p-2 rounded">{{ $problem->hint }}</p>
-        @endif
+        <button onclick="toggleHint()" class="mt-2 px-4 py-2 bg-yellow-500 text-white rounded">
+            Toggle Hint
+        </button>
+
+        <p id="hintMessage" class="hidden bg-yellow-100 p-2 rounded mt-2"></p>
 
         <!-- Editorial Section -->
-        @if($problem->editorial)
-        <h3 class="font-semibold mt-4 text-gray-800">Editorial:</h3>
-        <p class="bg-green-100 p-2 rounded hidden" id="editorial">{{ $problem->editorial }}</p>
-        <button onclick="document.getElementById('editorial').classList.toggle('hidden')" class="mt-2 px-4 py-2 bg-green-500 text-white rounded">
+        <button onclick="toggleEditorial()" class="mt-2 px-4 py-2 bg-green-500 text-white rounded">
             Toggle Editorial
         </button>
-        @endif
+
+        <p id="editorialMessage" class="hidden bg-green-100 p-2 rounded mt-2"></p>
     </div>
 
 </div>
@@ -286,6 +285,28 @@
                 spinner.classList.add("hidden");
                 outputField.textContent = "❌ Error: " + error.message;
             });
+    }
+
+    function toggleHint() {
+        var hintMessage = document.getElementById('hintMessage');
+        @if($problem->hint)
+        hintMessage.textContent = "{{ $problem->hint }}";
+        hintMessage.classList.remove('hidden');
+        @else
+        hintMessage.textContent = "No hints available for this problem.";
+        hintMessage.classList.remove('hidden');
+        @endif
+    }
+
+    function toggleEditorial() {
+        var editorialMessage = document.getElementById('editorialMessage');
+        @if($problem -> editorial)
+        editorialMessage.textContent = "{{ $problem->editorial }}";
+        editorialMessage.classList.remove('hidden');
+        @else
+        editorialMessage.textContent = "No editorial available for this problem.";
+        editorialMessage.classList.remove('hidden');
+        @endif
     }
 </script>
 
