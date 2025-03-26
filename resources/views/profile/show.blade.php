@@ -48,10 +48,10 @@
         </div>
     </div>
 
-    <!-- Recent Submissions -->
+    <!-- All Submissions Table -->
     <div class="mt-6 bg-white p-6 rounded-lg shadow-md">
-        <h3 class="text-xl font-semibold">📜 Recent Submissions</h3>
-        @if(count($submissions) > 0)
+        <h3 class="text-xl font-semibold">📜 All Submissions</h3>
+        @if(count($allSubmissions) > 0)
         <table class="w-full mt-4 border-collapse">
             <thead>
                 <tr class="bg-gray-200">
@@ -61,7 +61,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($submissions as $submission)
+                @foreach ($allSubmissions as $submission)
                 <tr class="border-b">
                     <td class="p-3">
                         <a href="{{ route('problems.show', $submission->problem->id) }}"
@@ -71,7 +71,7 @@
                     </td>
                     <td class="p-3">
                         <span class="px-3 py-1 rounded-full text-white 
-                            {{ $submission->status === 'Correct' ? 'bg-green-500' : 'bg-red-500' }}">
+                        {{ $submission->status === 'Correct' ? 'bg-green-500' : 'bg-red-500' }}">
                             {{ $submission->status }}
                         </span>
                     </td>
@@ -81,7 +81,7 @@
             </tbody>
         </table>
         @else
-        <p class="text-gray-500 mt-2">No recent submissions found.</p>
+        <p class="text-gray-500 mt-2">No submissions found.</p>
         @endif
     </div>
 

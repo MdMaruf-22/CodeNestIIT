@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\ContestSubmission;
 use App\Models\Contest;
+use App\Models\Submission;
 use Illuminate\Http\Request;
 
 class UserProfileController extends Controller
@@ -43,7 +44,10 @@ class UserProfileController extends Controller
                 'solvedCount' => $solvedCount,
             ];
         });
-
-        return view('profile.show', compact('user', 'submissions', 'solvedProblems', 'contestsWithSolvedCount'));
+        // Fetch all submissions from the submission table (all submissions, not only contest-related)
+        $allSubmissions = Submission::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('profile.show', compact('user', 'submissions', 'solvedProblems', 'contestsWithSolvedCount', 'allSubmissions'));
     }
 }
