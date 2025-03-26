@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ContestDiscussionController;
 use App\Http\Controllers\StudentDashboardController;
+use App\Models\Submission;
 
 Route::get('/', function () {
     return view('welcome');
@@ -89,7 +90,9 @@ Route::middleware(['auth', 'approved'])->group(function () {
         //Dedicated contest discussion forum
         Route::get('/contests/{contest}/discussions', [ContestDiscussionController::class, 'index'])->name('contests.discussions');
         Route::post('/contests/{contest}/discussions', [ContestDiscussionController::class, 'store'])->name('contests.discussions.store');
-
+        Route::get('/submissions/{submission}/code', function (Submission $submission) {
+                return response()->json(['code' => $submission->code]);
+            });
     });
 
     // Student-Specific Routes (Require Approval)
