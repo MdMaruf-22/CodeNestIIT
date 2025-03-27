@@ -16,15 +16,15 @@
         <div class="container mx-auto flex justify-between">
             <h1 class="text-xl font-bold">CodeNestIIT</h1>
             <div>
-            <a href="{{ auth()->user()->role === 'student' ? url('student/dashboard') : url('teacher/dashboard') }}" class="px-4">
-        Dashboard
-    </a>
-                <a href="{{ route('logout') }}" class="px-4"
-                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    Logout
+                <a href="{{ auth()->user()->role === 'student' ? url('student/dashboard') : url('teacher/dashboard') }}" class="px-4">
+                    Dashboard
                 </a>
                 <a href="{{ route('profile.show', auth()->user()->id) }}" class="px-4">
                     View Profile
+                </a>
+                <a href="{{ route('logout') }}" class="px-4"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Logout
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                     @csrf
