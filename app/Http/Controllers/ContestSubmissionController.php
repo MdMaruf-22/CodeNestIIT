@@ -58,16 +58,11 @@ class ContestSubmissionController extends Controller
         $isPlagiarized = $this->checkPlagiarism($code, $problemId, $contestId);
 
         $status = $isPlagiarized ? 'Plagiarized' : ($allPassed ? 'Correct' : 'Incorrect');
-
-
         // Get elapsed time since contest started
         $contestStartTime = \Carbon\Carbon::parse($contest->start_time)->setTimezone(config('app.timezone'));
         $now = now()->setTimezone(config('app.timezone'));
 
         $elapsedTime = $now->diffInMinutes($contestStartTime);
-
-
-
         // Calculate penalty
         $previousCorrectSubmission = ContestSubmission::where([
             'user_id' => auth()->id(),

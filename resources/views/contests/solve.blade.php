@@ -4,12 +4,18 @@
 
 @section('content')
 <!-- Back Button -->
-<div class="mb-4">
-    <a href="{{ route('contests.show', $contest->id) }}" class="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+<div class="-mt-6 mb-4"> 
+    <a href="{{ route('contests.show', $contest) }}"
+        class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-indigo-600 to-blue-500 
+              rounded-lg font-medium text-sm text-white hover:from-indigo-700 hover:to-blue-600 
+              focus:outline-none focus:ring-1 focus:ring-indigo-300 transition-all duration-150 
+              shadow hover:shadow-lg transform hover:scale-[1.02]">
+        <svg class="w-4 h-4 mr-1.5 -ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
-        <span class="font-medium">Back to Contest</span>
+        Back to Contest
     </a>
 </div>
 

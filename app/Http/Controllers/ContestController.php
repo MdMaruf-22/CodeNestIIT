@@ -126,24 +126,24 @@ class ContestController extends Controller
         return view('contests.leaderboard', compact('contest', 'leaderboard'));
     }
     public function results(Contest $contest)
-{
-    if (now()->lessThan($contest->end_time)) {
-        return redirect()->route('contests.show', $contest->id)->with('error', 'Results will be available after the contest ends.');
-    }
+    {
+        if (now()->lessThan($contest->end_time)) {
+            return redirect()->route('contests.show', $contest->id)->with('error', 'Results will be available after the contest ends.');
+        }
 
-    $leaderboard = ContestSubmission::where('contest_submissions.contest_id', $contest->id)
-        ->where('contest_submissions.status', 'Correct')
-        ->join('contest_problems', function ($join) {
-            $join->on('contest_submissions.problem_id', '=', 'contest_problems.problem_id')
-                ->on('contest_submissions.contest_id', '=', 'contest_problems.contest_id');
-        })
-        ->selectRaw('
+        $leaderboard = ContestSubmission::where('contest_submissions.contest_id', $contest->id)
+            ->where('contest_submissions.status', 'Correct')
+            ->join('contest_problems', function ($join) {
+                $join->on('contest_submissions.problem_id', '=', 'contest_problems.problem_id')
+                    ->on('contest_submissions.contest_id', '=', 'contest_problems.contest_id');
+            })
+            ->selectRaw('
             contest_submissions.user_id,
             SUM(contest_problems.score) as total_score,
             MAX(contest_submissions.submission_time) as last_solved_time,
             COUNT(DISTINCT contest_submissions.problem_id) as correct_submissions
         ')
-        ->whereRaw('contest_submissions.id IN (
+            ->whereRaw('contest_submissions.id IN (
             SELECT MIN(sub_time.id) FROM contest_submissions AS sub_time
             WHERE sub_time.user_id = contest_submissions.user_id
             AND sub_time.problem_id = contest_submissions.problem_id
@@ -151,12 +151,11 @@ class ContestController extends Controller
             AND sub_time.status = "Correct"
             GROUP BY sub_time.user_id, sub_time.problem_id, sub_time.contest_id
         )')
-        ->groupBy('contest_submissions.user_id')
-        ->orderByDesc('total_score')
-        ->orderBy('last_solved_time')
-        ->get();
+            ->groupBy('contest_submissions.user_id')
+            ->orderByDesc('total_score')
+            ->orderBy('last_solved_time')
+            ->get();
 
-    return view('contests.results', compact('contest', 'leaderboard'));
-}
-
+        return view('contests.results', compact('contest', 'leaderboard'));
+    }
 }
