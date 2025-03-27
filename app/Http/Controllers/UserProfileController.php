@@ -19,7 +19,7 @@ class UserProfileController extends Controller
             ->get();
 
         // Count unique problems solved
-        $solvedProblems = ContestSubmission::where('user_id', $user->id)
+        $solvedProblems = Submission::where('user_id', $user->id)
             ->where('status', 'Correct')
             ->distinct('problem_id')
             ->count();
@@ -47,7 +47,7 @@ class UserProfileController extends Controller
         // Fetch all submissions from the submission table (all submissions, not only contest-related)
         $allSubmissions = Submission::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
         return view('profile.show', compact('user', 'submissions', 'solvedProblems', 'contestsWithSolvedCount', 'allSubmissions'));
     }
 }
