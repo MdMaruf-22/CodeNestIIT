@@ -48,6 +48,8 @@ class UserProfileController extends Controller
         $allSubmissions = Submission::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-        return view('profile.show', compact('user', 'submissions', 'solvedProblems', 'contestsWithSolvedCount', 'allSubmissions'));
+        // Get the total number of submissions for the user (without pagination)
+        $totalAttempts = Submission::where('user_id', $user->id)->count();
+        return view('profile.show', compact('user', 'submissions', 'solvedProblems', 'contestsWithSolvedCount', 'allSubmissions', 'totalAttempts'));
     }
 }

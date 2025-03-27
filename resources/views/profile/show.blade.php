@@ -57,17 +57,14 @@
                     </svg>
                 </div>
                 <div>
-                    <p class="text-gray-500">Accuracy</p>
-                    <p class="text-3xl font-bold text-gray-800">
-                        @php
-                        $totalAttempts = $allSubmissions->count();
-                        $accuracy = $totalAttempts > 0
-                        ? round(($solvedProblems / $totalAttempts) * 100)
-                        : 0;
-                        @endphp
-                        {{ $accuracy }}%
-                    </p>
-                </div>
+            <p class="text-gray-500">Accuracy</p>
+            <p class="text-3xl font-bold text-gray-800">
+                @php
+                $accuracy = $totalAttempts > 0 ? round(($solvedProblems / $totalAttempts) * 100) : 0;
+                @endphp
+                {{ $accuracy }}%
+            </p>
+        </div>
             </div>
         </div>
     </div>
