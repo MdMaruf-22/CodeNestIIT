@@ -60,7 +60,7 @@
             <p class="text-gray-500">Accuracy</p>
             <p class="text-3xl font-bold text-gray-800">
                 @php
-                $accuracy = $totalAttempts > 0 ? round(($solvedProblems / $totalAttempts) * 100) : 0;
+                $accuracy = $totalAttempts > 0 ? round(($correctSubmissions / $totalAttempts) * 100) : 0;
                 @endphp
                 {{ $accuracy }}%
             </p>
