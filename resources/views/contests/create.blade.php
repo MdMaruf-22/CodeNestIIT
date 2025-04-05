@@ -5,7 +5,7 @@
 @section('content')
 <!-- Back Button -->
 <div class="-mt-4 mb-6">
-    <a href="{{ route('contests.index') }}"
+    <a href="{{ route('teacher.dashboard') }}"
         class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-indigo-600 to-blue-500 
               rounded-lg font-medium text-sm text-white hover:from-indigo-700 hover:to-blue-600 
               focus:outline-none focus:ring-1 focus:ring-indigo-300 transition-all duration-150 
@@ -15,9 +15,10 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
-        Back to Contests
+        Back to Dashboard
     </a>
 </div>
+
 <div class="container mx-auto p-6 max-w-screen-md">
     <!-- Header -->
     <div class="mb-6 text-center">

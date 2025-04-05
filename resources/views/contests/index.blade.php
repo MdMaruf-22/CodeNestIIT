@@ -25,7 +25,7 @@
             $past = $contests->filter(fn($c) => $c->end_time < $currentTime);
         @endphp
 
-        @foreach (['ongoing' => $ongoing, 'upcoming' => $upcoming, 'past' => $past] as $type => $list)
+        @foreach (['ongoing' => $ongoing, 'upcoming' => $upcoming, 'ended' => $past] as $type => $list)
             @if ($list->count() > 0)
                 <h3 class="text-2xl font-bold mt-12 mb-4 border-l-4 pl-4 
                     {{ $type === 'ongoing' ? 'text-green-600 border-green-600' : ($type === 'upcoming' ? 'text-blue-600 border-blue-600' : 'text-gray-500 border-gray-400') }}">

@@ -26,7 +26,7 @@ Route::middleware(['auth', 'approved'])->group(function () {
     Route::middleware(['role:teacher'])->group(function () {
         Route::get('/teacher/dashboard', function () {
             return view('teacher.dashboard');
-        });
+        })->name('teacher.dashboard');
 
         // Contest Management
         Route::get('/contests/create', [ContestController::class, 'create'])->name('contests.create');

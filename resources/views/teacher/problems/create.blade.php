@@ -3,42 +3,108 @@
 @section('title', 'Create Problem')
 
 @section('content')
-<h2 class="text-2xl font-bold">Create Problem</h2>
+<!-- Back Button -->
+<div class="-mt-4 mb-6">
+    <a href="{{ route('problems.index') }}"
+        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-500 
+              rounded-lg font-semibold text-sm text-white hover:from-purple-700 hover:to-indigo-600 
+              focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all duration-150 
+              shadow hover:shadow-lg transform hover:scale-[1.02]">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Problem
+    </a>
+</div>
 
-<form action="{{ route('teacher.problems.store') }}" method="POST" class="mt-4">
-    @csrf
-    <label class="block">Title:</label>
-    <input type="text" name="title" required class="w-full p-2 border rounded">
+<!-- Container -->
+<div class="container mx-auto max-w-3xl bg-white p-8 rounded-xl shadow-xl">
+    <!-- Header -->
+    <div class="mb-6 text-center">
+        <h2 class="text-4xl font-extrabold text-gray-800">📝 Create a New Problem</h2>
+        <p class="text-gray-500 mt-2">Fill in the details below to add a problem to your contest set.</p>
+    </div>
 
-    <label class="block mt-2">Description:</label>
-    <textarea name="description" required class="w-full p-2 border rounded"></textarea>
+    <!-- Form -->
+    <form action="{{ route('teacher.problems.store') }}" method="POST" class="space-y-5">
+        @csrf
 
-    <label class="block mt-2">Input Format:</label>
-    <textarea name="input_format" required class="w-full p-2 border rounded"></textarea>
+        <div>
+            <label class="block font-medium text-gray-700">Title:</label>
+            <input type="text" name="title" required
+                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-200">
+        </div>
 
-    <label class="block mt-2">Output Format:</label>
-    <textarea name="output_format" required class="w-full p-2 border rounded"></textarea>
+        <div>
+            <label class="block font-medium text-gray-700">Description:</label>
+            <textarea name="description" required rows="4"
+                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-200"></textarea>
+        </div>
 
-    <label class="block mt-2">Sample Input:</label>
-    <textarea name="sample_input" required class="w-full p-2 border rounded"></textarea>
+        <div>
+            <label class="block font-medium text-gray-700">Input Format:</label>
+            <textarea name="input_format" required
+                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-200"></textarea>
+        </div>
 
-    <label class="block mt-2">Sample Output:</label>
-    <textarea name="sample_output" required class="w-full p-2 border rounded"></textarea>
+        <div>
+            <label class="block font-medium text-gray-700">Output Format:</label>
+            <textarea name="output_format" required
+                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-200"></textarea>
+        </div>
 
-    <label class="block mt-2">Difficulty:</label>
-    <select name="difficulty" class="w-full p-2 border rounded">
-        <option value="Easy">Easy</option>
-        <option value="Medium" selected>Medium</option>
-        <option value="Hard">Hard</option>
-    </select>
+        <div>
+            <label class="block font-medium text-gray-700">Sample Input:</label>
+            <textarea name="sample_input" required
+                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-200"></textarea>
+        </div>
 
-    <label class="block mt-2">Tags (comma-separated):</label>
-    <input type="text" name="tags" class="w-full p-2 border rounded" placeholder="Example: Math, DP, Graph">
-    <label class="block mt-2">Hint (Optional):</label>
-    <textarea name="hint" rows="2" class="w-full p-2 border rounded" placeholder="Short hint">{{ old('hint', $problem->hint ?? '') }}</textarea>
+        <div>
+            <label class="block font-medium text-gray-700">Sample Output:</label>
+            <textarea name="sample_output" required
+                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-200"></textarea>
+        </div>
 
-    <label class="block mt-2">Editorial (Optional):</label>
-    <textarea name="editorial" rows="6" class="w-full p-2 border rounded" placeholder="Detailed editorial">{{ old('editorial', $problem->editorial ?? '') }}</textarea>
-    <button type="submit" class="mt-4 px-6 py-2 bg-blue-500 text-white rounded">Create</button>
-</form>
+        <div>
+            <label class="block font-medium text-gray-700">Difficulty:</label>
+            <select name="difficulty"
+                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-200">
+                <option value="Easy">Easy</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Hard">Hard</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">Tags (comma-separated):</label>
+            <input type="text" name="tags"
+                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-200"
+                placeholder="Example: Math, DP, Graph">
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">Hint (Optional):</label>
+            <textarea name="hint" rows="2"
+                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-200"
+                placeholder="Short hint">{{ old('hint', $problem->hint ?? '') }}</textarea>
+        </div>
+
+        <div>
+            <label class="block font-medium text-gray-700">Editorial (Optional):</label>
+            <textarea name="editorial" rows="5"
+                class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-200"
+                placeholder="Detailed editorial">{{ old('editorial', $problem->editorial ?? '') }}</textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit"
+                class="w-full py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-lg shadow-md transition duration-300 transform hover:scale-[1.02]">
+                ✅ Create Problem
+            </button>
+        </div>
+    </form>
+</div>
 @endsection
