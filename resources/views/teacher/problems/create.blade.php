@@ -97,6 +97,38 @@
                 class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring focus:ring-indigo-200"
                 placeholder="Detailed editorial">{{ old('editorial', $problem->editorial ?? '') }}</textarea>
         </div>
+        <div>
+            <label class="block font-medium text-gray-700 mb-2">Test Cases:</label>
+            <div id="test-cases-wrapper" class="space-y-4">
+                <!-- Initial Test Case -->
+                <div class="test-case border border-gray-300 rounded-lg p-4" data-index="0">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-semibold">Test Case #1</h4>
+                        <button type="button" onclick="toggleCollapse(this)" class="text-sm text-blue-600 hover:underline">Collapse</button>
+                    </div>
+                    <div class="test-case-body space-y-3">
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Input:</label>
+                            <textarea name="test_cases[0][input]" required class="w-full p-2 border rounded" oninput="updatePreview(this, 'input')"></textarea>
+                            <div class="mt-1 text-xs text-gray-500">Preview: <span class="preview-input whitespace-pre-wrap"></span></div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Expected Output:</label>
+                            <textarea name="test_cases[0][output]" required class="w-full p-2 border rounded" oninput="updatePreview(this, 'output')"></textarea>
+                            <div class="mt-1 text-xs text-gray-500">Preview: <span class="preview-output whitespace-pre-wrap"></span></div>
+                        </div>
+
+                        <button type="button" onclick="removeTestCase(this)"
+                            class="text-red-500 hover:text-red-700 text-sm">❌ Remove</button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" onclick="addTestCase()"
+                class="mt-4 bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition">
+                ➕ Add Test Case
+            </button>
+        </div>
 
         <!-- Submit Button -->
         <div class="text-center">
@@ -108,3 +140,59 @@
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    let testCaseIndex = 1;
+
+    function addTestCase() {
+        const wrapper = document.getElementById('test-cases-wrapper');
+        const div = document.createElement('div');
+        div.className = 'test-case border border-gray-300 rounded-lg p-4';
+        div.dataset.index = testCaseIndex;
+
+        div.innerHTML = `
+            <div class="flex justify-between items-center mb-2">
+                <h4 class="font-semibold">Test Case #${testCaseIndex + 1}</h4>
+                <button type="button" onclick="toggleCollapse(this)" class="text-sm text-blue-600 hover:underline">Collapse</button>
+            </div>
+            <div class="test-case-body space-y-3">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Input:</label>
+                    <textarea name="test_cases[${testCaseIndex}][input]" required class="w-full p-2 border rounded" oninput="updatePreview(this, 'input')"></textarea>
+                    <div class="mt-1 text-xs text-gray-500">Preview: <span class="preview-input whitespace-pre-wrap"></span></div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Expected Output:</label>
+                    <textarea name="test_cases[${testCaseIndex}][output]" required class="w-full p-2 border rounded" oninput="updatePreview(this, 'output')"></textarea>
+                    <div class="mt-1 text-xs text-gray-500">Preview: <span class="preview-output whitespace-pre-wrap"></span></div>
+                </div>
+
+                <button type="button" onclick="removeTestCase(this)" class="text-red-500 hover:text-red-700 text-sm">❌ Remove</button>
+            </div>
+        `;
+
+        wrapper.appendChild(div);
+        testCaseIndex++;
+    }
+
+    function removeTestCase(button) {
+        const testCase = button.closest('.test-case');
+        testCase.remove();
+    }
+
+    function toggleCollapse(button) {
+        const body = button.closest('.test-case').querySelector('.test-case-body');
+        const isCollapsed = body.style.display === 'none';
+
+        body.style.display = isCollapsed ? 'block' : 'none';
+        button.textContent = isCollapsed ? 'Collapse' : 'Expand';
+    }
+
+    function updatePreview(textarea, type) {
+        const preview = textarea.closest('div').querySelector(`.preview-${type}`);
+        preview.textContent = textarea.value;
+    }
+</script>
+@endpush
